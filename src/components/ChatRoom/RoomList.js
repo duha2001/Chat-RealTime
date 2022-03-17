@@ -2,6 +2,8 @@ import { Button, Collapse, Typography } from "antd";
 import React from "react";
 import styled from "styled-components";
 import { PlusSquareOutlined } from "@ant-design/icons";
+import { AppContext } from "../../Context/AppProvider";
+import AppProvider from "../../Context/AppProvider";
 
 const { Panel } = Collapse;
 // Muốn overrive lại Panel thì cần bọc nằm trong dấu ngoặc
@@ -27,12 +29,34 @@ const LinkStyled = styled(Typography.Link)`
   color: white;
 `;
 function RoomList() {
+  const { rooms } = React.useContext(AppContext);
+  console.log(rooms);
+
+  // const {
+  //   user: { uid },
+  // } = React.useContext(AuthContext);
+  // /**
+  //  * {
+  //  *  name: 'room name',
+  //  *  description: 'mo ta',
+  //  *  members: [uid1, uid2, ...]
+  //  * }
+  //  */
+  // const roomsCondition = React.useMemo(() => {
+  //   return {
+  //     fieldName: "members",
+  //     operator: "array-contains",
+  //     compareValue: uid,
+  //   };
+  // }, [uid]);
+  // const rooms = useFireStore("rooms", roomsCondition);
+  // console.log({ rooms });
   return (
     <Collapse ghost defaultActiveKey={[1]}>
       <PanelStyled header="Danh sách các phòng" key="1">
-        <LinkStyled>Room 1</LinkStyled>
-        <LinkStyled>Room 2</LinkStyled>
-        <LinkStyled>Room 3</LinkStyled>
+        {rooms.map((room) => (
+          <LinkStyled key={room.id}>{room.name}</LinkStyled>
+        ))}
         <Button type="text" icon={<PlusSquareOutlined />} className="add-room">
           Thêm phòng
         </Button>

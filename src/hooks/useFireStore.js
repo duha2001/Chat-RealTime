@@ -1,4 +1,3 @@
-import { de } from "date-fns/locale";
 import React, { useState } from "react";
 import { db } from "../firebase/config";
 
@@ -17,21 +16,22 @@ const useFireStore = (collection, condition) => {
       if (!condition.compareValue || !condition.compareValue.length) {
         return;
       }
-      collectionRef.where(
+      collectionRef = collectionRef.where(
         condition.fieldName,
         condition.operator,
         condition.compareValue
       );
     }
-    const unsubcribe = collectionRef.onSnapshot((snapshot) => {
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const documents = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
       setDocuments(documents);
     });
-    return unsubcribe;
-  }, []);
+    return unsubscribe;
+  }, [collection, condition]);
+  return documents;
 };
 
 export default useFireStore;
