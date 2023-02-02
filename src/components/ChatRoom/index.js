@@ -1,9 +1,9 @@
-import React from "react";
-import { Row, Col } from "antd";
-import Sidebar from "./Sidebar";
-import ChatWindow from "./ChatWindow";
+import React from 'react';
+import { Row, Col } from 'antd';
+import Sidebar from './Sidebar';
+import ChatWindow from './ChatWindow';
 
-function ChatRoom() {
+export default function ChatRoom() {
   return (
     <div>
       <Row>
@@ -17,5 +17,3 @@ function ChatRoom() {
     </div>
   );
 }
-
-export default ChatRoom;

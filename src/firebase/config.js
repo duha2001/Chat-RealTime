@@ -1,26 +1,29 @@
-// import firebase from "firebase/app";
-import firebase from "firebase/compat/app";
-import "firebase/compat/analytics";
-import "firebase/compat/firestore";
-import "firebase/compat/auth";
+import firebase from 'firebase/app';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDznO84BOWGM-pq9U1vFWAHQNzDMMdhHM8",
-  authDomain: "chat-app-80ca9.firebaseapp.com",
-  projectId: "chat-app-80ca9",
-  storageBucket: "chat-app-80ca9.appspot.com",
-  messagingSenderId: "779121049853",
-  appId: "1:779121049853:web:6c0f7916b4ed4cbcc1be94",
-  measurementId: "G-0NY8G0RCHB",
+import 'firebase/analytics';
+import 'firebase/auth';
+import 'firebase/firestore';
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyBRpDZ63mVfrzmzTjHFjRssP4cOvw_jc04',
+  authDomain: 'chat-app-c975a.firebaseapp.com',
+  projectId: 'chat-app-c975a',
+  storageBucket: 'chat-app-c975a.appspot.com',
+  messagingSenderId: '942648297216',
+  appId: '1:942648297216:web:d8c4321ba778c8808f95e5',
+  measurementId: 'G-01WLMKYFFM',
 };
-
 // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 const auth = firebase.auth();
 const db = firebase.firestore();
+
+if (window.location.hostname === 'localhost') {
+  // auth.useEmulator('http://localhost:9099');
+  // db.useEmulator('localhost', '8080');
+}
+
 export { db, auth };
 export default firebase;

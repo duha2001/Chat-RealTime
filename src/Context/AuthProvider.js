@@ -1,40 +1,45 @@
-import { Spin } from "antd";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/config";
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { auth } from '../firebase/config';
+import { Spin } from 'antd';
 
 export const AuthContext = React.createContext();
 
-function AuthProvider({ children }) {
-  const navigate = useNavigate();
+export default function AuthProvider({ children }) {
   const [user, setUser] = useState({});
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
     const unsubscibed = auth.onAuthStateChanged((user) => {
-      console.log(user);
-      // Cần kiểm tra nếu người dùng đúng thì điều hướng người dùng tiếp theo
       if (user) {
-        // Destructuring ES6
         const { displayName, email, uid, photoURL } = user;
-        setUser({ displayName, email, uid, photoURL });
+        setUser({
+          displayName,
+          email,
+          uid,
+          photoURL,
+        });
         setIsLoading(false);
-        navigate("/");
+        history.push('/');
         return;
       }
-      navigate("/login");
+
+      // reset user info
+      setUser({});
+      setIsLoading(false);
+      history.push('/login');
     });
-    // Clean funtion
+
+    // clean function
     return () => {
       unsubscibed();
     };
-  }, [navigate]);
+  }, [history]);
 
   return (
     <AuthContext.Provider value={{ user }}>
-      {isLoading ? <Spin /> : children}
+      {isLoading ? <Spin style={{ position: 'fixed', inset: 0 }} /> : children}
     </AuthContext.Provider>
   );
 }
-
-export default AuthProvider;

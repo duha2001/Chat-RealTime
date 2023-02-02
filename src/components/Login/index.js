@@ -1,71 +1,44 @@
-import React from "react";
-import { Row, Col, Button } from "antd";
-import Title from "antd/lib/typography/Title";
-import firebase, { auth, db } from "../../firebase/config";
-import { useNavigate } from "react-router-dom";
-import { addDocument } from "../../firebase/service";
+import React from 'react';
+import { Row, Col, Button, Typography } from 'antd';
+import firebase, { auth } from '../../firebase/config';
+import { addDocument, generateKeywords } from '../../firebase/services';
+
+const { Title } = Typography;
+
 const fbProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
-// Đối với V6 React-router-dom không useHistory -> useNavigate
-//  Lưu ý: Sau khi đăng nhập thì cần check các thông tin trong data như additionalUserInfo xem dữ liệu isNewUser là true hay false
-function Login() {
-  // const navigate = useNavigate();
-  // const handleFblogin = async () => {
-  //   const { additionalUserInfo, user } = await auth.signInWithPopup(fbProvider);
-  //   // console.log({ data });
-  //   // Kiểm tra xem có phải là user mới hay không
-  //   if (additionalUserInfo?.isNewUser) {
-  //     // db.collection("users").add({
-  //     //   displayName: user.displayName,
-  //     //   email: user.email,
-  //     //   photoURL: user.photoURL,
-  //     //   uid: user.displayName,
-  //     //   providerId: additionalUserInfo.providerId,
-  //     // });
-  //     addDocument("users", {
-  //       displayName: user.displayName,
-  //       email: user.email,
-  //       photoURL: user.photoURL,
-  //       uid: user.displayName,
-  //       providerId: additionalUserInfo.providerId,
-  //     });
-  //   }
-  // };
+
+export default function Login() {
   const handleLogin = async (provider) => {
     const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
+
     if (additionalUserInfo?.isNewUser) {
-      addDocument("users", {
+      addDocument('users', {
         displayName: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
-        uid: user.displayName,
+        uid: user.uid,
         providerId: additionalUserInfo.providerId,
+        keywords: generateKeywords(user.displayName?.toLowerCase()),
       });
     }
   };
-  // Sau khi đăng nhập thành công thì cần điều huowngsn người dùng và trong firebase có thuộc tính đó là onAuthStateChanged
-  // auth.onAuthStateChanged((user) => {
-  //   console.log(user);
-  //   // Cần kiểm tra nếu người dùng đúng thì điều hướng người dùng tiếp theo
-  //   if (user) {
-  //     navigate("/");
-  //   }
-  // });
+
   return (
     <div>
-      <Row justify="center" style={{ height: 800 }}>
+      <Row justify='center' style={{ height: 800 }}>
         <Col span={8}>
-          <Title style={{ textAlign: "center" }} Level={3}>
+          <Title style={{ textAlign: 'center' }} level={3}>
             Fun Chat
           </Title>
           <Button
-            style={{ width: "100%", marginBottom: 5 }}
+            style={{ width: '100%', marginBottom: 5 }}
             onClick={() => handleLogin(googleProvider)}
           >
-            Đăng nhập bằng google
+            Đăng nhập bằng Google
           </Button>
           <Button
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             onClick={() => handleLogin(fbProvider)}
           >
             Đăng nhập bằng Facebook
@@ -75,5 +48,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;
